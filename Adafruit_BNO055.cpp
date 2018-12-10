@@ -91,14 +91,12 @@ bool Adafruit_BNO055::begin(adafruit_bno055_opmode_t mode)
   write8(BNO055_PAGE_ID_ADDR, 0);
 
   /* Set the output units */
-  /*
   uint8_t unitsel = (0 << 7) | // Orientation = Android
                     (0 << 4) | // Temperature = Celsius
                     (0 << 2) | // Euler = Degrees
                     (1 << 1) | // Gyro = Rads
                     (0 << 0);  // Accelerometer = m/s^2
   write8(BNO055_UNIT_SEL_ADDR, unitsel);
-  */
 
   /* Configure axis mapping (see section 3.4) */
   /*
@@ -341,10 +339,11 @@ imu::Vector<3> Adafruit_BNO055::getVector(adafruit_vector_type_t vector_type)
       xyz[2] = ((double)z)/16.0;
       break;
     case VECTOR_GYROSCOPE:
+      /* 1 rps = 900 LSB */
       /* 1dps = 16 LSB */
-      xyz[0] = ((double)x)/16.0;
-      xyz[1] = ((double)y)/16.0;
-      xyz[2] = ((double)z)/16.0;
+      xyz[0] = ((double)x)/900.0;
+      xyz[1] = ((double)y)/900.0;
+      xyz[2] = ((double)z)/900.0;
       break;
     case VECTOR_EULER:
       /* 1 degree = 16 LSB */
